@@ -1,4 +1,4 @@
-import { IComment } from "@/interfaces/comment.interfaces";
+import { IComment, TEditComment } from "@/interfaces/comment.interfaces";
 import { IPoster, TCreatePoster, TEditPoster } from "@/interfaces/poster.interfaces";
 import { IUserComment } from "@/interfaces/user.interfaces";
 import api from "@/services/api";
@@ -11,6 +11,8 @@ interface IPosterProviderData {
   posterDelete: (id: string) => Promise<true | undefined>;
   commentGet: (id: string) => Promise<IComment[] | undefined>;
   commentCreate: (id: string, data: IUserComment) => Promise<IComment | undefined>;
+  commentEdit: (id: string, data: TEditComment) => Promise<IComment | undefined>;
+  commentDelete: (id: string) => Promise<true | undefined>;
 }
 
 const PosterContext = createContext<IPosterProviderData>({} as IPosterProviderData);
@@ -148,6 +150,59 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
       });
     }
   };
+
+  const commentEdit = async (id: string, data: TEditComment): Promise<IComment | undefined> => {
+
+    try {
+      const response = await api.patch(`/comments/${id}`, data.content);
+      toast({
+        status: "success",
+        title: "Comentário atualizado com sucesso",
+        duration: 3000,
+        position: "bottom-right",
+        containerStyle: {
+          color: "white",
+        },
+        isClosable: true,
+      });
+      return response.data;
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        status: "error",
+        description:
+          error.response?.data.message ||
+          "Ops... Ocorreu algo de errado! Tente novamente mais tarde",
+        duration: 3000,
+        position: "top-right",
+        containerStyle: {
+          color: "white",
+        },
+        isClosable: true,
+      });
+    }
+  };
+
+  const commentDelete = async (id: string): Promise<true | undefined> => {
+    try {
+      await api.delete(`/comments/${id}`);
+      return true;
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        status: "error",
+        description: "Ops... Ocorreu algo de errado! Tente novamente mais tarde",
+        duration: 3000,
+        position: "top-right",
+        containerStyle: {
+          color: "white",
+        },
+        isClosable: true,
+      });
+    }
+  };
+
+
   return (
     <>
       <PosterContext.Provider
@@ -157,6 +212,8 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
           posterDelete,
           commentGet,
           commentCreate,
+          commentEdit,
+          commentDelete
         }}
       >
         {children}
