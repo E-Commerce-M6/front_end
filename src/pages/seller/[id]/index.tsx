@@ -33,7 +33,7 @@ const SellerPage = () => {
           setCount(response.data.count);
           setSeller(response.data.sellerData);
         } catch (error: any) {
-          console.log(error);
+          console.error(error);
           router.push("/404");
         }
       }
