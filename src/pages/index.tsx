@@ -8,14 +8,17 @@ import { Box, Container, Flex, Heading, Text, useToast } from "@chakra-ui/react"
 import React, { useEffect, useState } from "react";
 import bgImage from "../assets/bgHome.png";
 import Pagination from "@/components/Pagination";
-import { useRouter } from "next/router";
+import { GetServerSideProps, NextPage } from "next";
+import { ParsedUrlQuery } from "querystring";
 
-const Home = () => {
+interface IHomeProps {
+  query: ParsedUrlQuery;
+}
+const Home: NextPage<IHomeProps> = ({ query }) => {
   const [posterList, setPosterList] = useState<IPosterGet[]>([]);
   const [filters, setFilters] = useState<IPosterFilters>([] as any);
   const [homeLoading, setHomeLoading] = useState<boolean>(true);
   const [count, setCount] = useState<number>(0);
-  const router = useRouter();
   const toast = useToast();
 
   useEffect(() => {
@@ -24,11 +27,10 @@ const Home = () => {
 
       try {
         const [posters, filters] = await Promise.all([
-          // BUSCA ATUALIZADA DOS ANUNCIOS PUBLICADOS E FILTRO PARA OS MESMOS
           api.get(`/posters`, {
             timeout: 20000,
             params: {
-              ...router.query,
+              ...query,
               perPage: 12,
               published: 1,
             },
@@ -36,7 +38,7 @@ const Home = () => {
           api.get(`/posters/filters`, {
             timeout: 20000,
             params: {
-              ...router.query,
+              ...query,
               published: 1,
             },
           }),
@@ -49,11 +51,11 @@ const Home = () => {
         if (!toast.isActive("ServerExp")) {
           toast({
             status: "error",
-            title: "O servidor demorou muito para responder",
-            description:
+            title:
               error.code == "ECONNABORTED"
-                ? "Recarregue a página ou tente novamente mais tarde"
-                : error.response?.data.message,
+                ? "O servidor demorou muito para responder"
+                : "Ops, ocorreu um erro",
+            description: "Recarregue a página ou tente novamente mais tarde",
             duration: 5000,
             position: "bottom-right",
             containerStyle: {
@@ -70,7 +72,7 @@ const Home = () => {
     };
 
     getPostersAndFilters();
-  }, [router.query]);
+  }, [, query]);
 
   return (
     <>
@@ -136,12 +138,12 @@ const Home = () => {
             showSeller={true}
             isLoading={homeLoading}
           />
-          <Filter filters={filters!} query={router.query} />
+          <Filter filters={filters!} query={query} />
         </Flex>
         <Pagination
           count={count}
-          page={Number(parseInt(router.query?.page! as string)) || 1}
-          query={router.query}
+          page={Number(parseInt(query?.page! as string)) || 1}
+          query={query}
         />
       </Container>
       <Footer />
@@ -150,3 +152,11 @@ const Home = () => {
 };
 
 export default Home;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  return {
+    props: {
+      query: ctx.query,
+    },
+  };
+};
