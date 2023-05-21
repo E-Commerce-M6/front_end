@@ -87,10 +87,12 @@ const SellerPage = () => {
                 </Heading>
                 <Tag
                   fontWeight={"medium"}
+                  minW={"fit-content"}
                   fontSize={"body.2"}
                   bgColor={"brand.4"}
                   color={"brand.1"}
                   rounded={"4px"}
+                  maxH={"28px"}
                   p={"4px 8px"}
                 >
                   Anunciante
