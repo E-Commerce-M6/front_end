@@ -4,7 +4,7 @@ import Header from "@/components/Header/Header";
 import PosterList from "@/components/PosterList";
 import { IPosterGet, IPosterFilters } from "@/interfaces/poster.interfaces";
 import api from "@/services/api";
-import { Box, Container, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Text, useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import bgImage from "../assets/bgHome.png";
 import Pagination from "@/components/Pagination";
@@ -16,6 +16,7 @@ const Home = () => {
   const [homeLoading, setHomeLoading] = useState<boolean>(true);
   const [count, setCount] = useState<number>(0);
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     const getPostersAndFilters = async () => {
@@ -44,7 +45,24 @@ const Home = () => {
         setFilters(filters.data);
         setCount(posters.data.count);
       } catch (error: any) {
-        console.log(error.cause);
+        console.error(error);
+        if (!toast.isActive("ServerExp")) {
+          toast({
+            status: "error",
+            title: "O servidor demorou muito para responder",
+            description:
+              error.code == "ECONNABORTED"
+                ? "Recarregue a página ou tente novamente mais tarde"
+                : error.response?.data.message,
+            duration: 5000,
+            position: "bottom-right",
+            containerStyle: {
+              color: "white",
+            },
+            isClosable: true,
+            id: "ServerExp",
+          });
+        }
         setPosterList([]);
         setFilters([] as any);
       }
