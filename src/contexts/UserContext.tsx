@@ -89,7 +89,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         isClosable: true,
       });
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         position: "bottom-right",
         title:
@@ -142,8 +142,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       destroyCookie(null, "ecommerce.token");
       setUser(null);
       router.push("/login");
-    } catch (err: any) {
-      console.log(err);
+    } catch (error: any) {
+      console.error(error);
       toast({
         position: "bottom-right",
         title: "Ops... Ocorreu algo de errado! Tente novamente mais tarde",

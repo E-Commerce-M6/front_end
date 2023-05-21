@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             path: "/",
           });
         } catch (error: any) {
-          console.log(error);
+          console.error(error);
           if (!toast.isActive("expired")) {
             toast({
               position: "bottom-right",
@@ -117,7 +117,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       }
       router.push("/");
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         position: "bottom-right",
         title: error.response?.data.message || "Ops, ocorreu um erro. Tente novamente mais tarde",

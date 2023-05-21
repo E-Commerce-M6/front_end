@@ -59,7 +59,7 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
       });
       return response.data;
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         status: "error",
         description:
@@ -111,7 +111,7 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
       });
       return response.data;
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         status: "error",
         description:
@@ -132,7 +132,7 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
       await api.delete(`/posters/${id}`);
       return true;
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         status: "error",
         description: "Ops... Ocorreu algo de errado! Tente novamente mais tarde",
@@ -151,7 +151,7 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
       const response = await api.get(`/posters/${id}/comments`);
       return response.data;
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       if (!toast.isActive("commentGet")) {
         toast({
           status: "error",
@@ -173,7 +173,7 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
       const response = await api.post(`/posters/${id}/comments`, data);
       return response.data;
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         status: "error",
         description: "Ops... Ocorreu um erro ao fazer o comentário.",
@@ -192,7 +192,7 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
       const response = await api.patch(`/comments/${id}`, data);
       return response.data;
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         status: "error",
         description: "Ops... Ocorreu um erro ao fazer o comentário.",
@@ -211,7 +211,7 @@ export const PosterProvider = ({ children }: { children: React.ReactNode }) => {
       await api.delete(`/comments/${id}`);
       return true;
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       toast({
         status: "error",
         description: "Ops... Ocorreu algo de errado! Tente novamente mais tarde",

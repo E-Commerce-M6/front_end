@@ -45,10 +45,8 @@ const Profile: NextPage = () => {
 
           setPosters(response.data.data);
           setCount(response.data.count);
-          // setSeller(response.data.sellerData);
         } catch (error: any) {
-          console.log(error.cause);
-
+          console.error(error);
           router.push("/404");
         }
       }
